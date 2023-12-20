@@ -9,6 +9,7 @@ using UnityEngine.AI;
 public class TargetMover : MonoBehaviour
 {
     private GameObject _target;
+    private string _sprint = "SprintJump";
 
     public void OnMoveToTarget()
     {
@@ -20,12 +21,12 @@ public class TargetMover : MonoBehaviour
         while (Vector3.Distance(transform.position, _target.transform.position) > 1f)
         {
             gameObject.GetComponent<NavMeshAgent>().SetDestination(_target.transform.position);
-            gameObject.GetComponent<Animator>().SetTrigger("SprintJump");
+            gameObject.GetComponent<Animator>().SetTrigger(_sprint);
 
             yield return null;
         }
 
-        gameObject.GetComponent<Animator>().ResetTrigger("SprintJump");
+        gameObject.GetComponent<Animator>().ResetTrigger(_sprint);
 
         if (_target.TryGetComponent<Resource>(out Resource res))
             GetComponent<Unit>().TakeResource(res);
