@@ -10,6 +10,16 @@ public class TargetMover : MonoBehaviour
 {
     private GameObject _target;
     private string _sprint = "SprintJump";
+    private Unit _unit;
+    private Animator _animator;
+    private NavMeshAgent _navMeshAgent;
+
+    private void Start()
+    {
+        _unit = GetComponent<Unit>();
+        _animator = GetComponent<Animator>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+    }
 
     public void OnMoveToTarget()
     {
@@ -20,18 +30,18 @@ public class TargetMover : MonoBehaviour
     {
         while (Vector3.Distance(transform.position, _target.transform.position) > 1f)
         {
-            gameObject.GetComponent<NavMeshAgent>().SetDestination(_target.transform.position);
-            gameObject.GetComponent<Animator>().SetTrigger(_sprint);
+            _navMeshAgent.SetDestination(_target.transform.position);
+            _animator.SetTrigger(_sprint);
 
             yield return null;
         }
 
-        gameObject.GetComponent<Animator>().ResetTrigger(_sprint);
+        _animator.ResetTrigger(_sprint);
 
         if (_target.TryGetComponent<Resource>(out Resource res))
-            GetComponent<Unit>().TakeResource(res);
+            _unit.TakeResource(res);
         else
-            GetComponent<Unit>().PutResource();
+            _unit.PutResource();
     }
 
     public void SetTarget(GameObject target)

@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(TargetMover))]
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private GameObject _pointResource;
+    [SerializeField] private Transform _pointResource;
     
     private Base _homeBase;
     private Vector3 _stayPosition;
@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour
     private TargetMover _targetMover;
 
     public bool IsBusy => _isBusy;
+    public TargetMover TargetMover => _targetMover; 
 
     private void Start()
     {
@@ -42,7 +43,7 @@ public class Unit : MonoBehaviour
     public void TakeResource(Resource res)
     {
         res.transform.SetParent(transform,true);
-        res.transform.position = _pointResource.transform.position;
+        res.transform.position = _pointResource.position;
         res.SetScale();
         _portableResource = res;
         _targetMover.SetTarget(_homeBase.transform.GetChild(0).gameObject);

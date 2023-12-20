@@ -18,6 +18,7 @@ public class Base : MonoBehaviour
     {
         UnitsInfo();
         ResourceInfo();
+        _scanner = GetComponent<LevelScanner>();
     }
 
     private void UnitsInfo()
@@ -38,7 +39,6 @@ public class Base : MonoBehaviour
 
     public void CollectResource()
     {
-        _scanner = GetComponent<LevelScanner>();
         int resourceId = Random.Range(0, _scanner.Resources.Count);
 
         if (!_scanner.Resources[resourceId].GetComponent<Resource>().IsEmployed)
@@ -47,8 +47,8 @@ public class Base : MonoBehaviour
             {
                 if (!unit.IsBusy)
                 {
-                    unit.GetComponent<TargetMover>().SetTarget(_scanner.Resources[resourceId].gameObject);
-                    unit.GetComponent<TargetMover>().OnMoveToTarget();
+                    unit.TargetMover.SetTarget(_scanner.Resources[resourceId].gameObject);
+                    unit.TargetMover.OnMoveToTarget();
                     unit.SetUnitStatus(true);
                     _scanner.Resources[resourceId].GetComponent<Resource>().SetStatus();
                     break;

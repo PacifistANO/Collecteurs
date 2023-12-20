@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
+[RequireComponent(typeof(Base))]
 public class LevelScanner : MonoBehaviour
 {
     [SerializeField] private LayerMask _layerMask;
@@ -11,8 +12,14 @@ public class LevelScanner : MonoBehaviour
 
     private int _scanZoneSize = 40;
     private List<Collider> _resources;
+    private Base _base;
 
     public List<Collider> Resources => _resources;
+
+    private void Start()
+    {
+        _base = GetComponent<Base>();
+    }
 
     private void FixedUpdate()
     {
@@ -20,7 +27,7 @@ public class LevelScanner : MonoBehaviour
 
         if(_resources.Count > 0)
         {
-            GetComponent<Base>().CollectResource();
+            _base.CollectResource();
         }
     }
 

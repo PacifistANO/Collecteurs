@@ -13,24 +13,25 @@ public class ResourcesSpawner : MonoBehaviour
     private Vector3 _spawnPoint;
     private float _randX;
     private float _randZ;
-    private float _timer;
+    private bool _isSpawning;
 
-    private void Update()
+    private void Start()
     {
-        _timer -= Time.deltaTime;
-
-        if(_timer <= 0)
-        {
-            Spawn();
-            _timer = _timeBeforeSpawn;
-        }
+        _isSpawning = true;
+        StartCoroutine(Spawn());
     }
 
-    private void Spawn()
+    private IEnumerator Spawn()
     {
-        _randX = UnityEngine.Random.Range(_highLeftPointOfZone.x, _bottomRightPointOfZone.x);
-        _randZ = UnityEngine.Random.Range(_highLeftPointOfZone.z, _bottomRightPointOfZone.z);
-        _spawnPoint = new Vector3(_randX, transform.position.y, _randZ);
-        Instantiate(_recourcePrefab, _spawnPoint, Quaternion.identity);
+        WaitForSeconds _waitingTime = new WaitForSeconds(_timeBeforeSpawn);
+
+        while (_isSpawning)
+        {
+            _randX = UnityEngine.Random.Range(_highLeftPointOfZone.x, _bottomRightPointOfZone.x);
+            _randZ = UnityEngine.Random.Range(_highLeftPointOfZone.z, _bottomRightPointOfZone.z);
+            _spawnPoint = new Vector3(_randX, transform.position.y, _randZ);
+            Instantiate(_recourcePrefab, _spawnPoint, Quaternion.identity);
+            yield return _waitingTime;
+        }
     }
 }

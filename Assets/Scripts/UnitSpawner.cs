@@ -26,7 +26,7 @@ public class UnitSpawner : MonoBehaviour
             Unit newUnit = Instantiate(_unitPrefab, spawnPoint, Quaternion.identity);
             newUnit.transform.rotation = Quaternion.Euler(0, 135, 0);
             newUnit.SetStartPosition(transform.position,transform.rotation);
-            newUnit.GetComponent<Unit>().SetHomeBase(_base);
+            newUnit.SetHomeBase(_base);
             _base.AddUnit(newUnit);
             yield return null;
         }
