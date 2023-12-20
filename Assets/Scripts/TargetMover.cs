@@ -21,11 +21,6 @@ public class TargetMover : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public void OnMoveToTarget()
-    {
-        StartCoroutine(MoveToTarget());
-    }
-
     private IEnumerator MoveToTarget()
     {
         while (Vector3.Distance(transform.position, _target.transform.position) > 1f)
@@ -42,6 +37,11 @@ public class TargetMover : MonoBehaviour
             _unit.TakeResource(res);
         else
             _unit.PutResource();
+    }
+
+    public void OnMoveToTarget()
+    {
+        StartCoroutine(MoveToTarget());
     }
 
     public void SetTarget(GameObject target)
