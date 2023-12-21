@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraMover : MonoBehaviour
 {
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _moveSpeed;
@@ -12,11 +12,12 @@ public class CameraController : MonoBehaviour
     private float _rotateBoost;
     private float _maxHeight = 10;
     private float _minHeight = -10;
+    private const string MouseScrollWheel = "Mouse ScrollWheel";
 
     private void Update()
     {
-        float horizontalDirection = Input.GetAxis("Horizontal");
-        float verticalDirection = Input.GetAxis("Vertical");
+        float horizontalDirection = Input.GetAxis(nameof(Axis.Horizontal));
+        float verticalDirection = Input.GetAxis(nameof(Axis.Vertical));
         _rotateDirection = 0;
 
         if (Input.GetKey(KeyCode.Q))
@@ -38,7 +39,13 @@ public class CameraController : MonoBehaviour
 
         transform.Rotate(Vector3.up * _rotateSpeed * _rotateDirection * _rotateBoost * Time.deltaTime, Space.World);
         transform.Translate(new Vector3(horizontalDirection, 0, verticalDirection) * _moveSpeed * Time.deltaTime, Space.Self);
-        transform.Translate(new Vector3(0, -Input.GetAxis("Mouse ScrollWheel"), 0) * _zoomSpeed * Time.deltaTime, Space.Self);
+        transform.Translate(new Vector3(0, -Input.GetAxis(MouseScrollWheel), 0) * _zoomSpeed * Time.deltaTime, Space.Self);
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _minHeight, _maxHeight), transform.position.z);
+    }
+
+    private enum Axis
+    {
+        Horizontal,
+        Vertical
     }
 }

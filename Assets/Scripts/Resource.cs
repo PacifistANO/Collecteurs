@@ -5,6 +5,7 @@ using UnityEngine;
 public class Resource : MonoBehaviour 
 {
     private bool _isEmployed;
+    private float _scaleMod = 0.5f;
 
     public bool IsEmployed => _isEmployed;
 
@@ -15,6 +16,6 @@ public class Resource : MonoBehaviour
 
     public void SetScale()
     {
-        transform.localScale *= 0.5f;
+        transform.localScale *= _scaleMod;
     }
 }

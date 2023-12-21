@@ -13,6 +13,7 @@ public class TargetMover : MonoBehaviour
     private Unit _unit;
     private Animator _animator;
     private NavMeshAgent _navMeshAgent;
+    private float _minDistanceToTarget = 1f;
 
     private void Start()
     {
@@ -23,7 +24,7 @@ public class TargetMover : MonoBehaviour
 
     private IEnumerator MoveToTarget()
     {
-        while (Vector3.Distance(transform.position, _target.transform.position) > 1f)
+        while (Vector3.Distance(transform.position, _target.transform.position) > _minDistanceToTarget)
         {
             _navMeshAgent.SetDestination(_target.transform.position);
             _animator.SetTrigger(_sprint);
