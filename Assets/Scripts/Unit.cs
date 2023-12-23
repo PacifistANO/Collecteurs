@@ -23,6 +23,17 @@ public class Unit : MonoBehaviour
         _targetMover = GetComponent<TargetMover>();
     }
 
+    private void Update()
+    {
+        if (_targetMover.IsArrived)
+        {
+            if (_targetMover.Target.TryGetComponent<Resource>(out Resource res))
+                TakeResource(res);
+            else if (_portableResource)
+                PutResource();
+        }
+    }
+
     public void SetStartPosition(Vector3 position, Quaternion rotation)
     {
         _stayPosition = position;
@@ -44,7 +55,7 @@ public class Unit : MonoBehaviour
     {
         res.transform.SetParent(transform,true);
         res.transform.position = _pointResource.position;
-        res.SetScale();
+        res.ChangeScale();
         _portableResource = res;
         _targetMover.SetTarget(_homeBase.transform.GetChild(0).gameObject);
         _targetMover.OnMoveToTarget();
@@ -55,6 +66,7 @@ public class Unit : MonoBehaviour
         _homeBase.AddResource(_portableResource);
         Destroy(_portableResource.gameObject);
         _isBusy = false;
+        _targetMover.ResetStatus();
         SetPosition();
     }
 

@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class Resource : MonoBehaviour 
 {
-    private bool _isEmployed;
     private float _scaleMod = 0.5f;
 
-    public bool IsEmployed => _isEmployed;
-
-    public void SetStatus()
-    {
-        _isEmployed = true;
-    }
-
-    public void SetScale()
+    public void ChangeScale()
     {
         transform.localScale *= _scaleMod;
     }

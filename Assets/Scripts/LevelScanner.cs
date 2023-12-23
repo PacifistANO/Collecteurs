@@ -3,41 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(Base))]
 public class LevelScanner : MonoBehaviour
 {
     [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private TMP_Text _resourcesInfo;
 
     private int _scanZoneSize = 40;
-    private List<Collider> _resources;
-    private Base _base;
+    private Queue<Collider> _resources = new Queue<Collider>();
+    private int _timeBeforeScan = 2;
 
-    public List<Collider> Resources => _resources;
+    public Queue<Collider> Resources => _resources;
 
     private void Start()
     {
-        _base = GetComponent<Base>();
+        StartCoroutine(Scanning());
     }
 
-    private void FixedUpdate()
+    private IEnumerator Scanning()
     {
-        ScanZone();
+        WaitForSeconds waitingTime = new WaitForSeconds(_timeBeforeScan);
 
-        if(_resources.Count > 0)
+        while (true)
         {
-            _base.CollectResource();
+            Collider[] resources = Physics.OverlapSphere(transform.position, _scanZoneSize, _layerMask);
+
+            foreach (Collider res in resources)
+            {
+                _resources.Enqueue(res);
+            }
+
+            yield return waitingTime;
         }
     }
 
-    private void ScanZone()
+    public void RemoveResourceFromQueue()
     {
-        _resources = Physics.OverlapSphere(transform.position, _scanZoneSize, _layerMask).ToList<Collider>();
-        ScanningInfo();
-    }
-    private void ScanningInfo()
-    {
-        _resourcesInfo.text = $"Ресурсы для сбора - {_resources.Count}";
+        _resources.Dequeue().gameObject.layer = 0;
     }
 }

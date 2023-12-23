@@ -21,6 +21,14 @@ public class Base : MonoBehaviour
         _scanner = GetComponent<LevelScanner>();
     }
 
+    private void Update()
+    {
+        if(_scanner.Resources.Count > 0)
+        {
+            CollectResource();
+        }
+    }
+
     private void UnitsInfo()
     {
         _unitsInfo.text = $"Количество юнитов - {_units.Count}";
@@ -39,20 +47,15 @@ public class Base : MonoBehaviour
 
     public void CollectResource()
     {
-        int resourceId = Random.Range(0, _scanner.Resources.Count);
-
-        if (!_scanner.Resources[resourceId].GetComponent<Resource>().IsEmployed)
+        foreach (Unit unit in _units)
         {
-            foreach (Unit unit in _units)
+            if (!unit.IsBusy)
             {
-                if (!unit.IsBusy)
-                {
-                    unit.TargetMover.SetTarget(_scanner.Resources[resourceId].gameObject);
-                    unit.TargetMover.OnMoveToTarget();
-                    unit.SetUnitStatus(true);
-                    _scanner.Resources[resourceId].GetComponent<Resource>().SetStatus();
-                    break;
-                }
+                unit.TargetMover.SetTarget(_scanner.Resources.Peek().gameObject);
+                _scanner.RemoveResourceFromQueue();
+                unit.TargetMover.OnMoveToTarget();
+                unit.SetUnitStatus(true);
+                break;
             }
         }
     }

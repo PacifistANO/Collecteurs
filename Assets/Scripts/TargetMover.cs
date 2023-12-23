@@ -4,21 +4,21 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Unit))]
+[RequireComponent(typeof(UnitAnimator))]
 public class TargetMover : MonoBehaviour
 {
     private GameObject _target;
-    private string _sprint = "SprintJump";
-    private Unit _unit;
-    private Animator _animator;
+    private UnitAnimator _unitAnimator;
     private NavMeshAgent _navMeshAgent;
     private float _minDistanceToTarget = 1f;
+    private bool _isArrived;
+
+    public bool IsArrived => _isArrived;
+    public GameObject Target => _target;
 
     private void Start()
     {
-        _unit = GetComponent<Unit>();
-        _animator = GetComponent<Animator>();
+        _unitAnimator = GetComponent<UnitAnimator>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
@@ -27,17 +27,13 @@ public class TargetMover : MonoBehaviour
         while (Vector3.Distance(transform.position, _target.transform.position) > _minDistanceToTarget)
         {
             _navMeshAgent.SetDestination(_target.transform.position);
-            _animator.SetTrigger(_sprint);
+            _unitAnimator.OnSprint();
 
             yield return null;
         }
 
-        _animator.ResetTrigger(_sprint);
-
-        if (_target.TryGetComponent<Resource>(out Resource res))
-            _unit.TakeResource(res);
-        else
-            _unit.PutResource();
+        _isArrived = true;
+        _unitAnimator.OffSprint();
     }
 
     public void OnMoveToTarget()
@@ -47,7 +43,13 @@ public class TargetMover : MonoBehaviour
 
     public void SetTarget(GameObject target)
     {
+        _isArrived = false;
         _target = target;
+    }
+
+    public void ResetStatus()
+    {
+        _isArrived = false;
     }
 }
 
